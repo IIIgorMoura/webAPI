@@ -2,24 +2,57 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consumir API em Node.js</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumir API em Node.js</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="container">
-    <h1>Itens da API</h1>
+    <div class="container">
+        <h1>Itens da API</h1>
 
-    <button id="fetch-items">Buscar Itens</button>
+        <button id="fetch-items">Buscar Itens</button>
 
-    <div class="items-section">
-      <h2>Itens:</h2>
-      <ul id="items-list"></ul>
+        <div class="items-section">
+            <h2>Itens:</h2>
+            <ul id="items-list"></ul>
+        </div>
     </div>
-  </div>
 
+    <!-- simula o uso da api -->
+    <script>
+        const apiKey = '1234567890abcdef';
+
+        document.getElementById('fetch-items').addEventListener('click', () => {
+            fetchItems(apiKey);
+        });
+
+        function fetchItems(apiKey) {
+            fetch('https://b5d54651-5606-41ed-832b-9737283bac50-00-1mulu96voobxl.spock.replit.dev/api/items', {
+                method: 'GET',
+                headers: {
+                    'x-api-key': apiKey
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar itens: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const itemsList = document.getElementById('items-list');
+                    itemsList.innerHTML = ''; // Limpa a lista atual de itens
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item.nome;
+                        itemsList.appendChild(li);
+                    });
+                })
+                .catch(error => alert(error.message));
+        }
+    </script>
 </body>
 
 </html>
